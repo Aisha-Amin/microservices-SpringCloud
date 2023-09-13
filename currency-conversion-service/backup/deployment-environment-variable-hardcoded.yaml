@@ -10,7 +10,7 @@ metadata:
   name: currency-conversion
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: currency-conversion
@@ -28,12 +28,9 @@ spec:
         - image: aishaamin/mmv3-currency-conversion-service:0.0.12-SNAPSHOT
           imagePullPolicy: IfNotPresent
           name: mmv3-currency-conversion-service
-          envFrom:
-            - configMapRef:
-                name: currency-conversion
-#         env:
-#            - name: CURRENCY_EXCHANGE_URI
-#              value: http://currency-exchange
+          env:
+            - name: CURRENCY_EXCHANGE_URI
+              value: http://currency-exchange
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -54,13 +51,4 @@ spec:
     app: currency-conversion
   sessionAffinity: None
   type: LoadBalancer
----
-apiVersion: v1
-data:
-  CURRENCY_EXCHANGE_URI: http://currency-exchange
-kind: ConfigMap
-metadata:
-  name: currency-conversion
-  namespace: default
-
 
