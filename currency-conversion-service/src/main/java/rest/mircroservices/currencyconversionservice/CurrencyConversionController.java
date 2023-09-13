@@ -1,5 +1,7 @@
 package rest.mircroservices.currencyconversionservice;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +28,8 @@ class RestTemplateConfiguration {
 @RestController
 public class CurrencyConversionController {
 
+    private Logger logger = LoggerFactory.getLogger(CurrencyConversionController.class);
+
     @Autowired
     private CurrencyExchangeProxy currencyExchangeProxy;
 
@@ -34,6 +38,9 @@ public class CurrencyConversionController {
 
     @GetMapping("/currency-conversion/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversion calculateCurrencyConversion(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity){
+
+        //CHANGE-KUBERNETES
+        logger.info("calculateCurrencyConversion called with {} to {} with {}", from, to, quantity);
 
         HashMap<String,String> uriVariables = new HashMap<>();
         uriVariables.put("from",from);
@@ -53,6 +60,9 @@ public class CurrencyConversionController {
 
     @GetMapping("/currency-conversion-feign/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversion calculateCurrencyConversionFeign(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity){
+
+        //CHANGE-KUBERNETES
+        logger.info("calculateCurrencyConversionFeign called with {} to {} with {}", from, to, quantity);
 
         CurrencyConversion currencyConversion = currencyExchangeProxy.getExchangeValue(from, to);
 ;
