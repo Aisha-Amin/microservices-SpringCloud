@@ -10,7 +10,7 @@ metadata:
   name: currency-exchange
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: currency-exchange
@@ -28,6 +28,16 @@ spec:
       - image: aishaamin/mmv3-currency-exchange-service:0.0.12-SNAPSHOT
         imagePullPolicy: IfNotPresent
         name: mmv3-currency-exchange-service
+        readinessProbe:
+          httpGet:
+            port: 8000
+            path: /actuator/health/readiness
+          failureThreshold: 30
+        livenessProbe:
+            httpGet:
+              port: 8000
+              path: /actuator/health/liveness
+            failureThreshold: 30
       restartPolicy: Always
 ---
 apiVersion: v1
